@@ -5,7 +5,7 @@ var BasicStrategy = require('passport-http').BasicStrategy;
 passport.use(new BasicStrategy(
     function(username, password, done) {
         var user = db.findOne(username);
-        if (username == user.username && password == user.password)
+        if (user != null && sername == user.username && password == user.password)
         {
             return done(null, { name: user.username });
         }
