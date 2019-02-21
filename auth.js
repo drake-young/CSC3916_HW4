@@ -4,11 +4,10 @@ var BasicStrategy = require('passport-http').BasicStrategy;
 
 passport.use(new BasicStrategy(
     function(username, password, done) {
-        //hard coded
-        var user = { name: "testuser" };
-        if (username == user.name && password == "cu")
+        var user = db.findOne(username);
+        if (username == user.username && password == user.password)
         {
-            return done(null, user);
+            return done(null, { name: user.username });
         }
         else
         {
