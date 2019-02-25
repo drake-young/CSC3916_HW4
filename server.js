@@ -150,7 +150,7 @@ router.route('/movies')
 	.all(function(req, res){ getBadRouteJSON(req, res, "/movies");});
 
 app.use('/', router);
-app.use(function(req,res){ getBadRouteJSON(req, res, "this URL path"); })
+app.use(function(req,res){ getBadRouteJSON(req, res, "this URL path"); });
 
 app.listen(process.env.PORT || 8080);
 
