@@ -1,7 +1,8 @@
 // === LOAD REQUIRED PACKAGES === //
-var passport     =  require( 'passport' );
-var JwtStrategy  =  require( 'passport-jwt' ).Strategy;
-var ExtractJwt   =  require( 'passport-jwt' ).ExtractJwt;
+var passport        =  require( 'passport' );
+var JwtStrategy     =  require( 'passport-jwt' ).Strategy;
+var ExtractJwt      =  require( 'passport-jwt' ).ExtractJwt;
+var userController  =  require( './usercontroller' );
 require( 'dotenv' ).load( );
 
 // === PREPARE VARS FOR JWT STRATEGY === //
@@ -16,15 +17,18 @@ passport.use(
 		function( jwt_payload , done ) 
 		{
 			// === ATTEMPT TO EXTRACT USER VIA TOKEN === //
-			var user = db.find( jwt_payload.id );
-
-			// === IF FOUND, AUTHENTICATE === //
-			if ( user )
-				done( null , user );
-			
-			// === OTHERWISE FAIL === //
-			else
-				done( null , false );
+			userController.findUserById( jwt_payload )
+				.then(
+					function( user )
+					{
+						// === IF FOUND, AUTHENTICATE === //
+						if ( user )
+							done( null , user );
+						
+						// === OTHERWISE FAIL === //
+						else
+							done( null , false );
+					});
 		}
 	));
 

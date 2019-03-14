@@ -1,6 +1,8 @@
 // === LOAD REQUIRED PACKAGES === //
 var passport       =  require( 'passport' );
 var BasicStrategy  =  require( 'passport-http' ).BasicStrategy;
+var userController =  require( './usercontroller' );
+var crypto         =  require( 'crypto' );
 
 // === BASIC AUTHENTICATION STRATEGY === //
 passport.use(
@@ -8,18 +10,21 @@ passport.use(
 		function( username , password , done ) 
 		{
 			// === ATTEMPT TO RETRIEVE USER FROM DATABASE === //
-			var user  =  db.findOne( username );
-			
-			// === IF USER IS FOUND, USERNAME MATCHES, AND PASSWORD MATCHES, AUTHENTICATE === //
-			if ( user != null && username == user.username && password == user.password )
-			{
-				return done( null , { name: user.username } );
-			}
-			// === OTHERWISE FAIL === //
-			else
-			{
-				return done( null , false );
-			}
+			userController.findUserByLogin( username , password )
+				.then(
+					function( user )
+					{
+						// === IF USER IS FOUND === //
+						if ( user )
+						{
+							return done( null , { name: user.username } );
+						}
+						// === OTHERWISE FAIL === //
+						else
+						{
+							return done( null , false );
+						}
+					});
 		}
 	));
 

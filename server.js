@@ -6,7 +6,12 @@ var passport           =  require( 'passport' );
 var authController     =  require( './auth' );
 var authJwtController  =  require( './auth_jwt' );
 var jwt                =  require( 'jsonwebtoken' );
-db                     =  require( './db' )( ); //global hack
+var User               =  require( './user' );
+var Movie              =  require( './movie' );
+var userController     =  require( './usercontroller' );
+var movieController    =  require( './moviecontroller' );
+require( './mydb.js' );
+
 
 // === CREATE THE APP === //
 var app  =  express( );
@@ -105,38 +110,16 @@ router.route( '/postjwt' )
             res.send( req.body );
         }
     );
+	
+router.route( '/findallusers' )
+    .post( userController.findAllUsers );
 
 	
 	
 // === ROUTES TO /SIGNUP === //
 router.route( '/signup' )
 	// === HANDLE POST REQUESTS === //
-	.post(
-		function( req , res ) 
-		{
-			// === IF USERNAME OR PASSWORD IS INVALID: FAIL === //
-			if ( !req.body.username || !req.body.password ) 
-			{
-				res.json({	
-							success  :  false, 
-							msg      :  'Please pass username and password.'
-						});
-			} 
-			// === SAVE THE NEW USER === //
-			else 
-			{
-				var newUser  =  {
-									username  :  req.body.username,
-									password  :  req.body.password
-								};
-				// save the user
-				db.save( newUser );   //no duplicate checking
-				res.json({
-							success  :  true, 
-							msg      :  'Successful created new user.'
-						});
-			}
-		})
+	.post( userController.signUp )
 	// === ALL OTHER ROUTES TO /SIGNUP ARE REJECTED === //
 	.all(
 		function( req , res )
@@ -149,46 +132,7 @@ router.route( '/signup' )
 // === ROUTES TO /SIGNIN === //
 router.route( '/signin' )
 	// == HANDLE POST REQUESTS === //
-	.post(
-		function( req , res ) 
-		{
-			// === RETRIEVE USER === //
-			var user;
-			if ( req.body.username )
-				user  =  db.findOne( req.body.username );
-			else
-				user  =  null;
-
-			// === FAIL IF NO USER FOUND === //
-			if ( !user )
-				res.status( 401 ).send(	{
-											success  :  false, 
-											msg      :  'Authentication failed. User not found.'
-										});
-			// === VALIDATE PASSWORD IF USER FOUND === //
-			else 
-			{
-				if ( req.body.password == user.password )  
-				{
-					var userToken  =  	{ 
-											id        :  user.id, 
-											username  :  user.username 
-										};
-					var token      =    jwt.sign( userToken , process.env.SECRET_KEY );
-					res.json({ 
-								success  :  true, 
-								token    :  'JWT ' + token
-							});
-				}
-				else 
-				{
-					res.status( 401 ).send( {
-												success  :  false, 
-												msg      :  'Authentication failed. Wrong password.'
-											} );
-				}
-			}
-		})
+	.post( userController.signIn )
 	// === ALL OTHER ROUTES TO /SIGNIN  ARE REJECTED
 	.all(
 		function( req , res )
@@ -200,30 +144,24 @@ router.route( '/signin' )
 router.route( '/movies' )
 	// === HANDLE GET REQUESTS === //
 	.get(
-		function( req ,res )
-		{
-			res.json( getMoviesJSONObject( req , "GET movies" ) );
-		})
+			authJwtController.isAuthenticated, 
+			movieController.getMovies 
+		)
 	// === HANDLE POST REQUESTS === //
 	.post(
-		function( req , res )
-		{
-			res.json( getMoviesJSONObject( req , "movie saved" ) ); 
-		})
+			authJwtController.isAuthenticated,
+			movieController.postMovie
+		)
 	// === HANDLE PUT REQUESTS === //
 	.put(
-		authJwtController.isAuthenticated, 
-		function( req , res )
-		{
-			res.json( getMoviesJSONObject( req , "movie updated" ) ); 
-		})
+			authJwtController.isAuthenticated, 
+			movieController.putMovie
+		)
 	// === HANDLE DELETE REQUESTS === //
 	.delete(
-		authController.isAuthenticated, 
-		function( req , res )
-		{
-			res.json( getMoviesJSONObject( req , "movie deleted" ) );
-		})
+			authJwtController.isAuthenticated, 
+			movieController.deleteMovie
+		)
 	// === REJECT ALL OTHER REQUESTS TO /MOVIES === //
 	.all(
 		function( req , res )
