@@ -8,8 +8,10 @@ var authJwtController  =  require( './auth_jwt' );
 var jwt                =  require( 'jsonwebtoken' );
 var User               =  require( './user' );
 var Movie              =  require( './movie' );
+var Review             =  require( './review' );
 var userController     =  require( './usercontroller' );
 var movieController    =  require( './moviecontroller' );
+var reviewController   =  require( './reviewController' );
 require( './mydb.js' );
 
 
@@ -168,6 +170,24 @@ router.route( '/movies' )
 		{ 
 			getBadRouteJSON( req , res , "/movies" );
 		});
+		
+// === ROUTES TO /REVIEWS === //
+router.route( '/reviews' )
+	// === HANDLE GET REQUESTS === //
+	.get( reviewController.getReviews )
+	
+	// === HANDLE POST REQUESTS === //
+	.post(
+			authJwtController.isAuthenticated,
+			reviewController.postReview // TODO change to reviewController.postReview
+		)
+	// === REJECT ALL OTHER REQUESTS TO /MOVIES === //
+	.all(
+		function( req , res )
+		{ 
+			getBadRouteJSON( req , res , "/movies" );
+		});
+		
 
 // === ATTEMPT TO ROUTE REQUEST === //
 app.use( '/' , router );
