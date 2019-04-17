@@ -66,7 +66,7 @@ exports.postReview =
 											movieTitle :  req.body.movieTitle,
 											reviewer   :  req.body.reviewer,
 											quote      :  req.body.quote,
-											rating     :  parseFloat(req.body.rating)
+											rating     :  req.body.rating
 										});
 										
 				// === Save the Review Object === //
