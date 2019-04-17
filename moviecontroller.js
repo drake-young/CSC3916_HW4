@@ -34,7 +34,8 @@ exports.getMovies =
 																reviews:'$reviews',
 																avgRating: { $avg : "$reviews.rating" }
 															}
-											}
+											},
+											{	$sort: { "$avgRating": -1 } }
 										]);
 			res.status( 200 ).send( movies );
 		}			
