@@ -32,7 +32,7 @@ exports.getMovies =
 																genre:4,
 																imageUrl:5,
 																reviews:'$reviews',
-																avgRating: { $avg : "$rating" }
+																avgRating: { $avg : "$reviews.rating" }
 															}
 											}
 										]);
