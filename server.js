@@ -1,4 +1,5 @@
 // === FROM EXTERNAL FILES === //
+var cors               =  require( 'cors' );
 var express            =  require( 'express' );
 var http               =  require( 'http' );
 var bodyParser         =  require( 'body-parser' );
@@ -19,6 +20,7 @@ require( './mydb.js' );
 var app  =  express( );
 
 // === SET UP BODY PARSER === //
+app.use( cors() );
 app.use( bodyParser.json( ) );
 app.use( bodyParser.urlencoded( { extended : false } ) );
 
