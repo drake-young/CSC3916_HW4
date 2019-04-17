@@ -17,7 +17,7 @@ var reviewSchema  =  new Schema({
 							required : true
 						},
 		rating     :	{
-							type     : Double,
+							type     : float,
 							required : true
 						}
 	});
