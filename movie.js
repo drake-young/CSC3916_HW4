@@ -26,6 +26,9 @@ var movieSchema  =  new Schema({
 											characterName : String
 										},
 							minItems : 3
+						},
+		imageUrl	 :  {
+							type : String
 						}
 	});
 	
