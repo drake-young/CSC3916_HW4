@@ -31,7 +31,8 @@ exports.getMovies =
 																yearReleased:3,
 																genre:4,
 																imageUrl:5,
-																reviews:'$reviews'
+																reviews:'$reviews',
+																avgRating: { $avg : "$rating" }
 															}
 											}
 										]);
