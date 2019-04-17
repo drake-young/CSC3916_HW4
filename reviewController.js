@@ -43,7 +43,7 @@ exports.postReview =
 			res.status( 500 ).send( { msg : 'Quote validation failed' } );
 		}
 		// === Validate Rating Field === //
-		else if ( !req.body.rating || isNaN(req.body.rating) || ( req.body.rating < 0 || req.body.rating > 5 ) )
+		else if ( !req.body.rating || ( req.body.rating < 0 || req.body.rating > 5 ) )
 		{
 			res.status( 500 ).send( { msg : 'Rating validation failed' } );
 		}
