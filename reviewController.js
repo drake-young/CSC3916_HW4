@@ -65,7 +65,7 @@ exports.postReview =
 				let review  =  new Review({
 											movieTitle :  req.body.movieTitle,
 											reviewer   :  req.body.reviewer,
-											quote      :  req.body.quote,
+											quote      :  parseFloat(req.body.quote),
 											rating     :  req.body.rating
 										});
 										
