@@ -2,7 +2,6 @@
 var mongoose     =  require( 'mongoose' );
 var Schema       =  mongoose.Schema;
 var SchemaTypes  =  mongoose.Schema.Types;
-require('mongoose-double')(mongoose);
 
 // === CREATE THE USER SCHEMA === //
 var reviewSchema  =  new Schema({
@@ -19,7 +18,7 @@ var reviewSchema  =  new Schema({
 							required : true
 						},
 		rating     :	{
-							type     : SchemaTypes.Double,
+							type     : Number,
 							required : true
 						}
 	});
